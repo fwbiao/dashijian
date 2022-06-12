@@ -1,0 +1,94 @@
+html,
+body {
+    margin: 0;
+    padding: 0;
+    height: 100%;
+    width: 100%;
+    background: url(../images/login_bg.jpg) no-repeat center;
+    background-size: cover;
+}
+.loginAndRegBox {
+    width: 400px;
+    height: 310px;
+    padding: 0 30px;
+    background-color: #fff;
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%,-50%);
+    .test-windows {
+       opacity: 0;
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        z-index: 1;
+        transform: translate(-50%,-50%);
+        width: 200px;
+        height: 40px;
+        background-color: rgba(22, 21, 21, 0.5);
+        font-size: 24px;
+        text-align: center;
+        line-height: 40px;
+        color: #fff;
+    }
+    .appear {
+        animation: appear 2s;
+    }
+    @keyframes appear {
+        0% {opacity: 100%;}
+        100% {
+            opacity: 0;
+        }
+    }
+    .title-box {
+        height: 60px;
+        background: url(../images/login_title.png) no-repeat center;
+    }
+    .content {
+        .form-group {
+            position: relative;
+            span {
+                position: absolute;
+                top: 8px;
+                left: 10px;
+            }
+            i.error {
+                display: none;
+                position: absolute;
+                top: 10px;
+                right: 5px;
+                color: red;
+            }
+        }
+        input {
+            height: 40px;
+            text-indent: 2em;
+        }
+        .Error {
+            border: 1px solid red;
+            box-shadow: 0 0 10px 3px rgba(199, 34, 34, 0.5);
+        }
+        .btn-primary {
+            display: block;
+            width: 100%;
+            text-align: center;
+            line-height: 30px;
+        }
+        .login-box {
+            display: none;
+            // background-color: green;
+        }
+        .reg-box {
+            display: none;
+            // background-color: red;
+        }
+        .active {
+            display: block;
+        }
+        a {
+            float: right;
+            margin-top: 8px;
+        }
+    }
+    
+}

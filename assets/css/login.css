@@ -1,0 +1,91 @@
+html,
+body {
+  margin: 0;
+  padding: 0;
+  height: 100%;
+  width: 100%;
+  background: url(../images/login_bg.jpg) no-repeat center;
+  background-size: cover;
+}
+.loginAndRegBox {
+  width: 400px;
+  height: 310px;
+  padding: 0 30px;
+  background-color: #fff;
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+}
+.loginAndRegBox .test-windows {
+  opacity: 0;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  z-index: 1;
+  transform: translate(-50%, -50%);
+  width: 200px;
+  height: 40px;
+  background-color: rgba(22, 21, 21, 0.5);
+  font-size: 24px;
+  text-align: center;
+  line-height: 40px;
+  color: #fff;
+}
+.loginAndRegBox .appear {
+  animation: appear 2s;
+}
+@keyframes appear {
+  0% {
+    opacity: 100%;
+  }
+  100% {
+    opacity: 0;
+  }
+}
+.loginAndRegBox .title-box {
+  height: 60px;
+  background: url(../images/login_title.png) no-repeat center;
+}
+.loginAndRegBox .content .form-group {
+  position: relative;
+}
+.loginAndRegBox .content .form-group span {
+  position: absolute;
+  top: 8px;
+  left: 10px;
+}
+.loginAndRegBox .content .form-group i.error {
+  display: none;
+  position: absolute;
+  top: 10px;
+  right: 5px;
+  color: red;
+}
+.loginAndRegBox .content input {
+  height: 40px;
+  text-indent: 2em;
+}
+.loginAndRegBox .content .Error {
+  border: 1px solid red;
+  box-shadow: 0 0 10px 3px rgba(199, 34, 34, 0.5);
+}
+.loginAndRegBox .content .btn-primary {
+  display: block;
+  width: 100%;
+  text-align: center;
+  line-height: 30px;
+}
+.loginAndRegBox .content .login-box {
+  display: none;
+}
+.loginAndRegBox .content .reg-box {
+  display: none;
+}
+.loginAndRegBox .content .active {
+  display: block;
+}
+.loginAndRegBox .content a {
+  float: right;
+  margin-top: 8px;
+}

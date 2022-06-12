@@ -1,0 +1,265 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>大事件-登录/注册</title>
+    <link rel="stylesheet" href="./assets/css/login.css">
+    <link rel="stylesheet" href="./assets//lib/layui/css/layui.css">
+    <link rel="stylesheet" href="./assets/lib/bootstrap.css">
+    <link rel="stylesheet" href="./assets/fonts/iconfont.css">
+</head>
+
+<body>
+    <!-- 头部logo区域 -->
+    <div class="container">
+        <img src="./assets/images/logo.png" alt="">
+    </div>
+    <!-- 登录注册区域 -->
+    <div class="loginAndRegBox">
+        <!-- 验证成功/失败的弹出窗口 -->
+        <div class="test-windows">
+
+        </div>
+        <!-- 头部区域 -->
+        <div class="title-box"></div>
+        <!-- 内容区域 -->
+        <div class="content">
+            <!-- 登录的盒子 -->
+            <div class="login-box active">
+                <form id="login_form">
+                    <div class="form-group">
+                        <span class="iconfont icon-user"></span>
+                        <input type="text" class="form-control " id="ipt_login_username" placeholder="请输入账户" name="username">
+                    </div>
+                    <div class="form-group">
+                        <span class="iconfont icon-home"></span>
+                        <input type="text" class="form-control" id="ipt_login_password" placeholder="请输入密码" name="password">
+                    </div>
+                    <button type="submit" class="btn btn-primary" id="btn_login">登录</button>
+                </form>
+                <a href="javascript:;" id="link_login">去注册账号</a>
+            </div>
+            <!-- 注册的盒子 -->
+            <div class="reg-box">
+                <form id="reg_form">
+                    <div class="form-group">
+                        <span class="iconfont icon-user"></span>
+                        <input type="text" class="form-control" id="ipt_reg_username" placeholder="请输入用户名" name="username">
+                    </div>
+                    <div class="form-group">
+                        <span class="iconfont icon-home"></span>
+                        <input type="text" class="form-control" id="ipt_reg_password" placeholder="请输入密码" name="password">
+                    </div>
+                    <div class="form-group">
+                        <span class="iconfont icon-home"></span>
+                        <input type="text" class="form-control" id="ipt_reg_repassword" placeholder="请再次输入密码" disabled>
+                        <i class="error">两次输入密码不一致</i>
+                    </div>
+                    <button type="submit" class="btn btn-primary" id="btn_reg">注册</button>
+                </form>
+                <a href="javascript:;" id="link_reg">去登录账号</a>
+            </div>
+        </div>
+    </div>
+    <script src="./assets/lib/jquery.js"></script>
+    <script src="./assets/js/baseAPI.js"></script>
+    <script src="./assets/js/login.js"></script>
+    <script>
+        $(function() {
+            //点击登录账号或注册账号，切换active类名，两个链接对应的界面隐藏显示
+            $('#link_login').on('click', function() {
+                $(this).parent().removeClass('active').siblings().addClass('active')
+            })
+            $('#link_reg').on('click', function() {
+                    $(this).parent().removeClass('active').siblings().addClass('active')
+                })
+                //表单验证
+                //定义正则表达式
+            const exp_username = /^\w{6,16}$/
+            const exp_password = /^\w{6,16}$/
+                //表单提交默认事件
+            $('#reg_form').on('submit', function(e) {
+                e.preventDefault()
+
+            })
+            $('#login_form').on('submit', function(e) {
+                    e.preventDefault()
+
+                })
+                //验证成功/失败的弹出窗口
+            function testWindows(text) {
+                $('.test-windows').addClass('appear').html(text)
+                setTimeout(() => {
+                    $('.test-windows').removeClass('appear').html('')
+                }, 2000);
+
+            }
+            //一、登录页面的验证
+            {
+                //定义一个布尔值，只要有表单错误就false，最后提交时候判断
+                let flag1 = false
+                let flag2 = false
+                    //复位账户错误函数
+                function resetUsername() {
+                    $('#ipt_login_username').on('focus', function() {
+                        $(this).removeClass('Error')
+                    })
+                }
+                //复位密码错误样式函数
+                function resetPassword() {
+                    $('#ipt_login_password').on('focus', function() {
+                        $('#ipt_login_password').removeClass('Error')
+                    })
+                }
+                //点击表单区域复位button
+                $('.loginAndRegBox').on('click', function() {
+                        $('#btn_login').text('登录').css('color', '#fff')
+                    })
+                    // 账号验证
+                $('#ipt_login_username').on('blur', function() {
+                    if (!exp_username.test($(this).val())) {
+                        return $(this).addClass('Error')
+                    }
+                    $(this).removeClass('Error')
+                    flag1 = true
+                })
+                resetUsername()
+                    //密码验证
+                $('#ipt_login_password').on('blur', function() {
+                    if (!exp_username.test($(this).val())) {
+                        return $(this).addClass('Error')
+                    }
+                    $('#ipt_login_password').removeClass('Error')
+                    flag2 = true
+                })
+                resetPassword()
+                    //点击按钮提交验证
+                $('#btn_login').on('click', function(e) {
+                    $('#ipt_login_username').trigger('blur')
+                    $('#ipt_login_password').trigger('blur')
+                    e.stopPropagation()
+                    if (flag1 && flag2) {
+                        //发送ajax请求验证账户
+                        $.ajax({
+                            method: 'post',
+                            url: '/api/login',
+                            data: $('#login_form').serialize(),
+                            success: function(res) {
+                                let str = '登录失败'
+                                if (res.status !== 0) {
+                                    return testWindows(str)
+                                }
+                                str = '登录成功'
+                                testWindows(str)
+                                    //将登录成功后的token值存到localStrorage中
+                                localStorage.setItem('token', res.token)
+                                location.href = '/index.html'
+                            }
+                        })
+                    }
+                })
+            }
+
+            //注册页面验证
+            {
+                //定义一个布尔值，只要有表单错误就false，最后提交时候判断
+                let flag1 = false
+                let flag2 = false
+                let flag3 = false
+                    //复位账户错误函数
+                function resetUsername() {
+                    $('#ipt_reg_username').on('focus', function() {
+                        $(this).removeClass('Error')
+                    })
+                }
+                //复位密码错误样式函数
+                function resetPassword() {
+                    $('#ipt_reg_password').on('focus', function() {
+                        $('#ipt_reg_password').removeClass('Error')
+                        $('i.error').hide()
+                    })
+                }
+                //复位密码错误样式函数
+                function resetRepassword() {
+                    $('#ipt_reg_repassword').on('focus', function() {
+                        $('#ipt_reg_repassword').removeClass('Error')
+                        $('i.error').hide()
+                    })
+                }
+                //点击表单区域复位button
+                // $('.loginAndRegBox').on('click', function() {
+                //         $('#btn_reg').text('注册').css('color', '#fff')
+                //     })
+                // 账号验证
+                $('#ipt_reg_username').on('blur', function() {
+                    if (!exp_username.test($(this).val())) {
+                        return $(this).addClass('Error')
+                    }
+                    $(this).removeClass('Error')
+                    flag1 = true
+                })
+                resetUsername()
+                    //密码输入时解锁再次验证密码输入框
+                $('#ipt_reg_password').on('input', function() {
+                        if ($(this).val().length !== 0) {
+                            $('#ipt_reg_repassword')[0].disabled = false
+                        }
+                        $(this).removeClass('Error')
+                        flag2 = true
+                    })
+                    //密码验证
+                $('#ipt_reg_password').on('blur', function() {
+                    if (!exp_username.test($(this).val())) {
+                        return $(this).addClass('Error')
+                    }
+                    $(this).removeClass('Error')
+                    flag2 = true
+                })
+                resetPassword()
+                    //再次密码验证
+                $('#ipt_reg_repassword').on('blur', function() {
+                    if (!exp_username.test($(this).val())) {
+                        return $(this).addClass('Error')
+                    }
+                    if ($('#ipt_reg_password').val() !== $('#ipt_reg_repassword').val()) {
+                        $(this).addClass('Error')
+                        return $('i.error').show()
+                    }
+                    $(this).removeClass('Error')
+                    flag3 = true
+                })
+                resetRepassword()
+                    //点击按钮提交验证
+                $('#btn_reg').on('click', function(e) {
+                    e.stopPropagation()
+                    if (flag1 && flag2 && flag3) {
+                        //注册成功后向服务器发起ajax请求
+                        var data = {
+                            username: $('#ipt_reg_username').val(),
+                            password: $('#ipt_reg_password').val()
+                        }
+                        $.post('/api/reguser', data, function(res) {
+                            let str = '注册失败'
+                            if (res.status !== 0) {
+                                return testWindows(str)
+                            }
+                            str = '注册成功'
+                            testWindows(str)
+                            $('#link_reg').click()
+                            $('#reg_form')[0].reset()
+                        })
+
+                    }
+                })
+
+            }
+
+        })
+    </script>
+
+</body>
+
+</html>
