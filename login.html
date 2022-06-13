@@ -141,6 +141,7 @@
                     $('#ipt_login_username').trigger('blur')
                     $('#ipt_login_password').trigger('blur')
                     e.stopPropagation()
+                    let str = '登录失败'
                     if (flag1 && flag2) {
                         //发送ajax请求验证账户
                         $.ajax({
@@ -148,7 +149,6 @@
                             url: '/api/login',
                             data: $('#login_form').serialize(),
                             success: function(res) {
-                                let str = '登录失败'
                                 if (res.status !== 0) {
                                     return testWindows(str)
                                 }
@@ -160,6 +160,7 @@
                             }
                         })
                     }
+                    testWindows(str)
                 })
             }
 
@@ -235,6 +236,7 @@
                     //点击按钮提交验证
                 $('#btn_reg').on('click', function(e) {
                     e.stopPropagation()
+                    let str = '注册失败'
                     if (flag1 && flag2 && flag3) {
                         //注册成功后向服务器发起ajax请求
                         var data = {
@@ -242,7 +244,6 @@
                             password: $('#ipt_reg_password').val()
                         }
                         $.post('/api/reguser', data, function(res) {
-                            let str = '注册失败'
                             if (res.status !== 0) {
                                 return testWindows(str)
                             }
@@ -253,6 +254,7 @@
                         })
 
                     }
+                    testWindows(str)
                 })
 
             }
