@@ -12,17 +12,9 @@ function getUserInfo() {
         // },
         success: function(res) {
             if (res.status !== 0) return console.log('获取用户信息失败')
-            console.log(res);
-            //渲染用户头像
+                //渲染用户头像
             renderAvatar(res.data)
         },
-        //无论访问成功还是失败都会调用complete
-        complete: function(res) {
-            if (res.responseJSON.status === 1 && res.responseJSON.message === '身份认证失败！') {
-                localStorage.removeItem('token')
-                location.href = '/login.html'
-            }
-        }
 
     })
 }
